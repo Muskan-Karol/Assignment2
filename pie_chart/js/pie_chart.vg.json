@@ -1,0 +1,43 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 300,
+  "height": 250,
+  "title": "Signs of Mental Illness",
+  "config": {"view": {"stroke": null}, "background": "#fcf2e9"},
+  "data": {
+    "url": "https://raw.githubusercontent.com/Muskan-Karol/FIT3179/main/Assignment2/bar_chart/data/fatal-police-shootings-data.csv",
+    "name": "csv"
+  },
+  "transform": [
+    {
+      "aggregate": [{"op": "count", "as": "pint"}],
+      "groupby": ["signs_of_mental_illness"]
+    },
+    {"calculate": "100 * datum.pint/7743", "as": "pint_per"}
+  ],
+  "encoding": {
+    "theta": {"field": "pint", "type": "quantitative", "stack": true},
+    "color": {
+      "field": "signs_of_mental_illness",
+      "type": "nominal",
+      "legend": null,
+      "scale": {"domain": ["TRUE", "FALSE"], "range": ["darkred", "lightgrey"]}
+    }
+  },
+  "layer": [
+    {
+      "mark": {"type": "arc", "innerRadius": 80, "outerRadius": 30},
+      "encoding": {
+        "tooltip": [
+          {"field": "pint_per", "type": "quantitative", "format": ".2f", "title":"% of victims showing sings of mental illness"}
+        ]
+      }
+    },
+    {
+      "mark": {"type": "text", "radius": 100},
+      "encoding": {
+        "text": {"field": "signs_of_mental_illness", "type": "nominal"}
+      }
+    }
+  ]
+}

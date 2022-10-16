@@ -1,0 +1,78 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "Victims of police shooting vs % of people in population, by race (2021)",
+  "width": 500,
+  "height": 400,
+  "config": {"view": {"stroke": null}, "background": "#fcf2e9"},
+  "data": {
+    "url": "https://raw.githubusercontent.com/Muskan-Karol/FIT3179/main/Assignment2/bar_chart/data/fatal-police-shooting-race.csv",
+    "name": "police"
+  },
+  "transform": [
+    {"filter": {"field": "race", "oneOf": ["W", "O", "B", "H", "N", "A"]}},
+    {
+      "filter": {
+        "field": "date",
+        "timeUnit": "date",
+        "range": ["31/12/2020", "01/01/2022"]
+      }
+    },
+    {
+      "aggregate": [{"op": "count", "as": "num_victims"}],
+      "groupby": ["raceFullName"]
+    },
+    {
+      "window": [{"op": "sum", "field": "num_victims", "as": "TotalVictims"}],
+      "frame": [null, null]
+    },
+    {
+      "calculate": "datum.num_victims/datum.TotalVictims * 100",
+      "as": "PercentOfTotal"
+    },
+    {
+      "lookup": "raceFullName",
+      "from": {
+        "data": {
+          "url": "https://raw.githubusercontent.com/Muskan-Karol/FIT3179/main/Assignment2/bar_chart/data/USPopDataPer2021.csv"
+        },
+        "key": "raceFullName",
+        "fields": ["Value", "ValuePercent"]
+      }
+    }
+  ],
+  "encoding": {
+    "x": {
+      "field": "raceFullName",
+      "type": "nominal",
+      "axis": {"grid": false, "labelAngle": 0},
+      "title": "Race"
+    }
+  },
+  "layer": [
+    {
+      "mark": {"type": "bar", "xOffset": -15, "size": 30, "color": "#ff8c66"},
+      "encoding": {
+        "y": {
+          "field": "ValuePercent",
+          "type": "quantitative",
+          "title": "",
+          "axis":{"grid": false}
+        },
+        "tooltip": [{"field": "ValuePercent", "title": "% in Population"}]
+      }
+    },
+    {
+      "mark": {"type": "bar", "xOffset": 15, "size": 30, "color": "darkred"},
+      "encoding": {
+        "y": {"field": "PercentOfTotal", "type": "quantitative", "title":"Percent %"},
+        "tooltip": [
+          {
+            "field": "PercentOfTotal",
+            "format": ".2f",
+            "title": "% of Victims"
+          }
+        ]
+      }
+    }
+  ]
+}
