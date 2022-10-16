@@ -5,7 +5,7 @@
   "height": 150,
   "title": "Female vs Male victims of police shootings, since 2015",
   "data": {
-    "url": "https://raw.githubusercontent.com/Muskan-Karol/FIT3179/main/Assignment2/dot_plot/data/fvm.csv",
+    "url": "https://raw.githubusercontent.com/Muskan-Karol/Assignment2/main/dot_plot/data/fvm.csv",
     "name": "csv"
   },
   "transform": [
