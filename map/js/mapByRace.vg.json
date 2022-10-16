@@ -5,54 +5,68 @@
   "config": {"view": {"stroke": null}, "background": "#fcf2e9"},
   "title": "Fatal shooting in the US by a police officer in the line of duty in 2021, per 100,000 population",
   "projection": {"type": "albersUsa"},
-  "data": {
-    "url": "https://raw.githubusercontent.com/Muskan-Karol/FIT3179/main/Assignment2/map/js/ne_110m_admin_1_states_provinces.topojson",
-    "format": {
-      "type": "topojson",
-      "feature": "ne_110m_admin_1_states_provinces"
-    },
-    "name": "topoJson"
-  },
-  "transform": [
+  "layer":[
     {
-      "lookup": "properties.postal",
-      "from": {
-        "data": {
-          "url": "https://raw.githubusercontent.com/Muskan-Karol/FIT3179/main/Assignment2/map/data/victimsByRaceFull.csv"
+      "data": {
+        "url": "https://raw.githubusercontent.com/Muskan-Karol/FIT3179/main/Assignment2/map/js/ne_110m_admin_1_states_provinces.topojson",
+        "format": {"type": "topojson", "feature": "ne_110m_admin_1_states_provinces"}
+      },
+      "transform": [
+        {
+          "calculate": "'Data not available in ' + datum.properties.name", "as": "note"
+        }
+      ],
+      "mark": {"type": "geoshape", "fill": "lightgray", "stroke": "white"},
+      "encoding": {"tooltip":{"field": "note"}}
+    },
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/Muskan-Karol/FIT3179/main/Assignment2/map/js/ne_110m_admin_1_states_provinces.topojson",
+        "format": {"type": "topojson", "feature": "ne_110m_admin_1_states_provinces"},
+        "name": "topoJson"
+      },
+      "transform": [
+        {
+          "lookup": "properties.postal",
+          "from": {
+            "data": {
+              "url": "https://raw.githubusercontent.com/Muskan-Karol/FIT3179/main/Assignment2/map/data/victimsByRaceFull.csv"
+            },
+            "key": "state",
+            "fields": ["race", "state", "VictimsPer100000", "raceFullName"]
+          }
+        }
+      ],
+      "mark": {"type": "geoshape", "stroke": "white"},
+      "encoding": {
+        "color": {
+          "field": "raceFullName",
+          "type": "nominal",
+          "scale": {
+            "domain": [
+              "White",
+              "Black",
+              "Asian",
+              "Native American",
+              "Hispanic",
+              "Other"
+            ],
+            "range": [
+              "#c7452e",
+              "#f68b55",
+              "#9e0805 ",
+              "#ffc6b3",
+              "#810636",
+              "#557A54"
+            ]
+          },
+          "legend": {"title": "Race/Ethnicity"}
         },
-        "key": "state",
-        "fields": ["race", "state", "VictimsPer100000", "raceFullName"]
+        "tooltip": [
+          {"field": "raceFullName", "title": "Race"},
+          {"field": "VictimsPer100000", "title": "Victims per 100,000 population"}
+        ]
       }
     }
-  ],
-  "mark": {"type": "geoshape", "stroke": "white"},
-  "encoding": {
-    "color": {
-      "field": "raceFullName",
-      "type": "nominal",
-      "scale": {
-        "domain": [
-          "White",
-          "Black",
-          "Asian",
-          "Native American",
-          "Hispanic",
-          "Other"
-        ],
-        "range": [
-          "#c7452e",
-          "#f68b55",
-          "#9e0805 ",
-          "#ffc6b3",
-          "#810636",
-          "#557A54"
-        ]
-      },
-      "legend":{"title":"Race/Ethnicity"}
-    },
-    "tooltip": [
-      {"field": "raceFullName", "title": "Race"}, 
-      {"field": "VictimsPer100000", "title": "Victims per 100,000 population"}
-    ]
-  }
+  ]
 }
